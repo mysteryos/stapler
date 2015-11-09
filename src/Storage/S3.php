@@ -4,6 +4,7 @@ namespace Codesleeve\Stapler\Storage;
 
 use Codesleeve\Stapler\Interfaces\Storage as StorageInterface;
 use Aws\S3\S3Client;
+use Aws\CloudFront\CloudFrontClient;
 use Codesleeve\Stapler\Attachment;
 
 class S3 implements StorageInterface
