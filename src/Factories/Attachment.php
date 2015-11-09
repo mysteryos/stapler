@@ -67,7 +67,8 @@ class Attachment
         $storage = $options['storage'];
         $options = array_replace_recursive($config->get($storage), $options);
         $options['styles'] = array_merge((array) $options['styles'], ['original' => '']);
-
+        $options['cloudfront'] = $config->get('cloudfront');
+        
         return $options;
     }
 }
