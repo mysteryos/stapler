@@ -50,7 +50,20 @@ class S3 implements StorageInterface
      */
     public function url($styleName)
     {
-        return $this->s3Client->getObjectUrl($this->attachedFile->s3_object_config['Bucket'], $this->path($styleName), null, ['PathStyle' => true]);
+        //Hacky stuff for Cloudfront
+        $objectConfig = $this->attachedFile->cloudfront;
+
+        //If cloudfront config is enabled, generate signed URL to cloudfront
+        if($objectConfig['enabled']) {
+            $cloudFrontClient = CloudFrontClient::factory($objectConfig);
+            return $cloudFrontClient->getSignedUrl([
+                'url'=> 'http://'.$objectConfig['distribution_url'].'/'.$this->path($styleName),
+                'expires'=> time() + 300
+            ]);
+        } else {
+            //Generate S3 URL
+            return $this->s3Client->getObjectUrl($this->attachedFile->s3_object_config['Bucket'], $this->path($styleName), null, ['PathStyle' => true]);
+        }        
     }
 
     /**
