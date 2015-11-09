@@ -48,7 +48,13 @@ class NativeConfig implements ConfigInterface
             'resizer' => '\Codesleeve\Stapler\File\Image\Resizer',
             'style' => '\Codesleeve\Stapler\Style',
             'validator' => '\Codesleeve\Stapler\Validator',
-        ]
+        ],
+       'cloudfront' => [
+           'enabled' => false,
+           'private_key' => '',
+           'distribution_url' => '',
+           'key_pair_id' => ''
+        ]        
     ];
 
     /**
