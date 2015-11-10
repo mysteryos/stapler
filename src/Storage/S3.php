@@ -58,7 +58,7 @@ class S3 implements StorageInterface
         if($objectConfig['enabled']) {
             $cloudFrontClient = CloudFrontClient::factory($objectConfig);
             return $cloudFrontClient->getSignedUrl([
-                'url'=> 'http://'.$objectConfig['distribution_url'].'/'.$this->path($styleName),
+                'url'=> urlencode('http://'.$objectConfig['distribution_url'].'/'.$this->path($styleName)),
                 'expires'=> time() + 300
             ]);
         } else {
