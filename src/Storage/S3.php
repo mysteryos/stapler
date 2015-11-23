@@ -49,22 +49,61 @@ class S3 implements StorageInterface
      *
      * @return string
      */
-    public function url($styleName)
+    public function url($styleName,$providerName=false)
     {
-        //Hacky stuff for Cloudfront
-        $objectConfig = $this->attachedFile->cloudfront;
-
-        //If cloudfront config is enabled, generate signed URL to cloudfront
-        if($objectConfig['enabled']) {
-            $cloudFrontClient = CloudFrontClient::factory($objectConfig);
-            return $cloudFrontClient->getSignedUrl([
-                'url'=> 'http://'.$objectConfig['distribution_url'].'/'.urlencode($this->path($styleName)),
-                'expires'=> time() + 300
-            ]);
+        if(is_string($providerName)) {
+            switch($providerName) {
+                case 'cloudfront':
+                    return $this->urlCloudfront($styleName);
+                    break;
+                case 'maxcdn':
+                    return $this->urlMaxcdn($styleName);
+                    break;
+                case 's3':
+                    return $this->urlS3($styleName);
+                    break;
+                default:
+                    throw new \RuntimeException("Provider not defined");
+            }
         } else {
+            //Hacky stuff for Cloudfront
+            $cloudfrontConfig = $this->attachedFile->cloudfront;
+
+            //If cloudfront config is enabled, generate signed URL to cloudfront
+            if($cloudfrontConfig['enabled']) {
+                return $this->urlCloudfront($styleName);
+
+            }
+
+            $maxcdnConfig = $this->attachedFile->maxcdn;
+            if($maxcdnConfig['enabled']) {
+                return $this->urlMaxcdn($styleName);
+            }
+
             //Generate S3 URL
-            return $this->s3Client->getObjectUrl($this->attachedFile->s3_object_config['Bucket'], $this->path($styleName), null, ['PathStyle' => true]);
-        }        
+            return $this->urlS3($styleName);
+        }
+    }
+
+    private function urlCloudfront($styleName)
+    {
+        $cloudFrontClient = CloudFrontClient::factory($cloudfrontConfig);
+        return $cloudFrontClient->getSignedUrl([
+            'url'=> 'http://'.$cloudfrontConfig['distribution_url'].'/'.urlencode($this->path($styleName)),
+            'expires'=> time() + 300
+        ]);
+    }
+
+    private function urlMaxcdn($styleName)
+    {
+        $maxcdnConfig = $this->attachedFile->maxcdn;
+        return 'http://'.$maxcdnConfig['distribution_url'].'/'.urlencode($this->path($styleName));
+    }
+
+    private function urlS3($styleName)
+    {
+        //Generate S3 URL
+        return $this->s3Client->getObjectUrl($this->attachedFile->s3_object_config['Bucket'], $this->path($styleName), null, ['PathStyle' => true]);
     }
 
     /**
