@@ -87,6 +87,7 @@ class S3 implements StorageInterface
 
     private function urlCloudfront($styleName)
     {
+        $cloudfrontConfig = $this->attachedFile->cloudfront;
         $cloudFrontClient = CloudFrontClient::factory($cloudfrontConfig);
         return $cloudFrontClient->getSignedUrl([
             'url'=> 'http://'.$cloudfrontConfig['distribution_url'].'/'.urlencode($this->path($styleName)),
