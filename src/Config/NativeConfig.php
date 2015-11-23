@@ -54,7 +54,11 @@ class NativeConfig implements ConfigInterface
            'private_key' => '',
            'distribution_url' => '',
            'key_pair_id' => ''
-        ]        
+        ],
+        'maxcdn' => [
+            'enabled'=> false,
+            'distribution_url' => ''
+        ]     
     ];
 
     /**
