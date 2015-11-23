@@ -53,7 +53,8 @@ class NativeConfig implements ConfigInterface
            'enabled' => false,
            'private_key' => '',
            'distribution_url' => '',
-           'key_pair_id' => ''
+           'key_pair_id' => '',
+           'expiry_time' => 300
         ],
         'maxcdn' => [
             'enabled'=> false,
