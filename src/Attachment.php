@@ -294,10 +294,10 @@ class Attachment implements AttachmentInterface
      *
      * @return string
      */
-    public function url($styleName = '')
+    public function url($styleName = '',$options=false)
     {
         if ($this->originalFilename()) {
-            return $this->storageDriver->url($styleName, $this);
+            return $this->storageDriver->url($styleName, $options);
         }
 
         return $this->defaultUrl($styleName);
