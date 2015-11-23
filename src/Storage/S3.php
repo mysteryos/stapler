@@ -90,7 +90,7 @@ class S3 implements StorageInterface
         $cloudFrontClient = CloudFrontClient::factory($cloudfrontConfig);
         return $cloudFrontClient->getSignedUrl([
             'url'=> 'http://'.$cloudfrontConfig['distribution_url'].'/'.urlencode($this->path($styleName)),
-            'expires'=> time() + 300
+            'expires'=> time() + $cloudfrontConfig['expiry_time']
         ]);
     }
 
